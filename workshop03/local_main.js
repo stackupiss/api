@@ -6,9 +6,8 @@ const range = require('express-range')
 const compression = require('compression')
 
 const { Validator, ValidationError } = require('express-json-validator-middleware')
-const  OpenAPIValidator  = require('express-openapi-validator').OpenApiValidator;
 
-const schemaValidator = new Validator({ allErrors: true, verbose: true });
+const  OpenAPIValidator  = require('express-openapi-validator').OpenApiValidator;
 
 const express = require('express')
 
@@ -32,31 +31,30 @@ app.use(express.urlencoded({ extended: true }));
 // TODO 1/2 Load schemans
 
 
-// Start of workshop
-// TODO 2/2 Copy your routes from workshop02 here
+TODO - load openapi here
+.install(app)
+.then(() => {
+	
+	// Start of workshop
+	// TODO 2/2 Copy your routes from workshop02 here
 
-// End of workshop
+	// End of workshop
 
-app.use('/schema', express.static(join(__dirname, 'schema')));
+	app.use('/schema', express.static(join(__dirname, 'schema')));
 
-app.use((error, req, resp, next) => {
+	app.use((error, req, resp, next) => {
 
-    if (error instanceof ValidationError) {
-  		console.error('Schema validation error: ', error)
-  		return resp.status(400).type('application/json').json({ error: error });
-    }
+		console.error('Error: ', error)
 
-    else if (error.status) {
-  		console.error('OpenAPI specification error: ', error)
-  		return resp.status(400).type('application/json').json({ error: error });
-    }
+		return resp.status(error.status || 500)
+			.type('application/json').json({ error: error });
 
-    console.error('Error: ', error);
-    resp.status(400).type('application/json').json({ error: error });
+	});
 
-});
+	const PORT = parseInt(process.argv[2] || process.env.APP_PORT) || 3000;
+	app.listen(PORT, () => {
+		 console.info(`Application started on port ${PORT} at ${new Date()}`);
+	});
 
-const PORT = parseInt(process.argv[2] || process.env.APP_PORT) || 3000;
-app.listen(PORT, () => {
-    console.info(`Application started on port ${PORT} at ${new Date()}`);
-});
+})
+
