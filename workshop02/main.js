@@ -3,19 +3,11 @@ const compression = require('compression')
 
 const express = require('express')
 
-const CitiesDB = require('./citiesdb');
+const data = require('./zips')
+const CitiesDB = require('./zipsdb')
 
 //Load application keys
-//Rename _keys.json file to keys.json
-const keys = require('./keys.json')
-
-console.info(`Using ${keys.mongo}`);
-
-const db = CitiesDB({  
-	connectionUrl: keys.mongo, 
-	databaseName: 'zips', 
-	collectionName: 'city'
-});
+const db = CitiesDB(data);
 
 const app = express();
 
@@ -26,51 +18,40 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mandatory workshop
 // TODO GET /api/states
-
-
+// Use db.findAllStates()
 
 
 // TODO GET /api/state/:state
-
-
+// Use db.findCitiesByState(:state, { limit?: 10, offset?: 0 })
+// 2nd parameter is optional
 
 
 // TODO GET /api/city/:cityId
-
+// Use db.findCityById(:id) returns null if not found
 
 
 // TODO POST /api/city
-
-
-
+// Use db.insertCity(cityDetails)
 
 // Optional workshop
 // TODO HEAD /api/state/:state
 // IMPORTANT: HEAD must be place before GET for the
 // same resource. Otherwise the GET handler will be invoked
-
+// use db.countCitiesInState(:state)
 
 
 // TODO GET /state/:state/count
+// use db.countCitiesInState(:state)
 
 
-
-// TODO GET /city/:name
-
+// TODO GET /api/city/:name
+// Use db.findCityByName(:name) 
 
 
 // End of workshop
 
-db.getDB()
-	.then((db) => {
-		const PORT = parseInt(process.argv[2] || process.env.APP_PORT) || 3000;
+const PORT = parseInt(process.argv[2] || process.env.APP_PORT) || 3000;
+app.listen(PORT, () => {
+	console.info(`Application started on port ${PORT} at ${new Date()}`);
+});
 
-		console.info('Connected to MongoDB. Starting application');
-		app.listen(PORT, () => {
-			console.info(`Application started on port ${PORT} at ${new Date()}`);
-		});
-	})
-	.catch(error => {
-		console.error('Cannot connect to mongo: ', error);
-		process.exit(1);
-	});

@@ -18,12 +18,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mandatory workshop
 // TODO GET /api/states
+// Use db.findAllStates()
 
 
 // TODO GET /api/state/:state
+// Use db.findCitiesByState(:state, { limit?: 10, offset?: 0 })
+// 2nd parameter is optional
 
 
 // TODO GET /api/city/:cityId
+// Use db.findcityById(:id) returns null if not found
 
 
 // TODO POST /api/city
@@ -32,12 +36,15 @@ app.use(express.urlencoded({ extended: true }));
 // TODO HEAD /api/state/:state
 // IMPORTANT: HEAD must be place before GET for the
 // same resource. Otherwise the GET handler will be invoked
+// use db.countCitiesInState(:state)
 
 
 // TODO GET /state/:state/count
+// use db.countCitiesInState(:state)
 
 
 // TODO GET /api/city/:name
+// Use db.findCityByName(:name) 
 
 
 // End of workshop
